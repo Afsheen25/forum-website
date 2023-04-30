@@ -1,0 +1,62 @@
+
+<html>
+<head>
+</head>
+<body>
+{% extends 'base.html' %} {% block content %}
+<h1>{{article.title}}</h1>
+<h3>By {{article.author}}</h3>
+<p class="article-control"><pre>{{article.content}}</pre></p>
+<h4>{{article.created_on.strftime('%d/%b/%Y')}}</h4>
+<form action="/comment/{{article.id}}" method="POST">
+  <div class="form-group">
+    <h3>Contribute t    o BrainWave💜</h3>
+	{% if comments_exist %}
+	  {% for comment in comments %}
+	    <div class="comment">
+	      <p class="comment-author">{{ comment.author }}</p>
+	      <p class="comment-content">{{ comment.comment }}</p>
+		  <p class="comment-date">{{ comment.created_on.strftime('%d/%m/%Y') }}</p>
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  <p>No comments yet.</p>
+	{% endif %}
+
+
+    {% for comment in comments %}
+  <div class="comment">
+    <p class="comment-author">{{ comments.author }}</p>
+    <p class="comment-content">{{ comments.comment }}</p>
+  </div>
+{% endfor %}
+  </div>
+  <div class="form-group">
+    <textarea
+      type="text"
+      name="comment"
+      class="form-control"
+      placeholder="Add a comment"
+      required
+    /> </textarea>
+  </div>
+
+{% if current_user.id %}
+    <input type="submit" value="Add Comment" class="button" />
+ {% else %}
+     <a class="button"  href="{{url_for('login')}}" >Add Comment</a> 
+
+     <!-- <input type="submit" value="Add Comment "  class="button" /> -->
+ {%endif %}
+  </form>
+
+
+{% if current_user.id == article.user_id %}
+<a class="button" href="/edit/{{article.id}}/">Update</a> 
+<a class="button" href="/delete/{{article.id}}/">Delete</a>
+<br />
+
+
+{% endif %} {% endblock content %}
+</body>
+</html>
